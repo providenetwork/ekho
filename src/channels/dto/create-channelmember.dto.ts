@@ -12,7 +12,7 @@ export default class CreateChannelMemberDto {
 
   @Field()
   @ApiProperty({ description: 'User identifier' })
-  userId: number;
+  userId: string;
 
   @Field()
   @ApiProperty({ description: 'Contact identifier' })

@@ -5,7 +5,7 @@ import { Field, InputType } from 'type-graphql';
 export default class CreateExternalChannelDto {
   @Field()
   @ApiProperty({ description: 'Channel creator' })
-  userId: number;
+  userId: string;
   @ApiProperty({ description: 'Channel name' })
   name: string;
   @ApiProperty({ description: 'Contact Name' })

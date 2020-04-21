@@ -22,7 +22,7 @@ export class ContactsService {
     private readonly keyManager: KeyManager,
   ) {}
 
-  async createContact(userId: number, name: string): Promise<Contact> {
+  async createContact(userId: string, name: string): Promise<Contact> {
     const user = await this.usersService.findById(userId, true);
     const oneUseKeyPair: CryptographyKeyPairDto = this.cryptographyService.generateOneUseKeyPair();
     const contact = new Contact();
@@ -33,14 +33,14 @@ export class ContactsService {
     return this.contactsRepository.save(contact);
   }
 
-  async getByUser(userId: number): Promise<Contact[]> {
+  async getByUser(userId: string): Promise<Contact[]> {
     return this.contactsRepository.find({
       select: ['id', 'name'],
       where: { user: { id: userId } },
     });
   }
 
-  async findOne(userId: number, name: string, orFail = false): Promise<Contact> {
+  async findOne(userId: string, name: string, orFail = false): Promise<Contact> {
     if (orFail) {
       return this.contactsRepository.findOneOrFail({ where: { user: { id: userId }, name } });
     } else {
@@ -52,13 +52,13 @@ export class ContactsService {
     return this.contactsRepository.find({ relations: ['user'] });
   }
 
-  async findOneContact(userId: number, contactId: number): Promise<Contact> {
+  async findOneContact(userId: string, contactId: number): Promise<Contact> {
     return this.contactsRepository.findOneOrFail({
       where: { id: contactId, user: userId },
     });
   }
 
-  async findOneContactBySigningKey(userId: number, name: string, signingKey: string): Promise<Contact> {
+  async findOneContactBySigningKey(userId: string, name: string, signingKey: string): Promise<Contact> {
     let contact = new Contact();
     try {
       contact = await this.contactsRepository.findOne({ where: { user: { id: userId }, signingKey } });
@@ -78,7 +78,7 @@ export class ContactsService {
   }
 
   async findOrCreateExternalContact(
-    userId: number,
+    userId: string,
     name: string,
     signingKey: string,
     identifier: string,
@@ -103,7 +103,7 @@ export class ContactsService {
     }
   }
 
-  async findOneOrCreate(userId: number, name: string): Promise<Contact> {
+  async findOneOrCreate(userId: string, name: string): Promise<Contact> {
     const contact = await this.contactsRepository.findOne({ where: { user: { id: userId }, name } });
     if (contact) {
       return contact;
@@ -116,27 +116,27 @@ export class ContactsService {
     await this.contactsRepository.delete({ name });
   }
 
-  async initHandshake(userId: number, contactName: string): Promise<ContactHandshakeDto> {
+  async initHandshake(userId: string, contactName: string): Promise<ContactHandshakeDto> {
     const contact = await this.findOneOrCreate(userId, contactName);
     return this.generateHandshake(userId, contact);
   }
 
-  async acceptInitHandshake(userId: number, contactName: string, handshake: ContactHandshakeDto): Promise<void> {
+  async acceptInitHandshake(userId: string, contactName: string, handshake: ContactHandshakeDto): Promise<void> {
     const contact = await this.findOneOrCreate(userId, contactName);
     await this.receiveHandshake(contact, handshake);
   }
 
-  async replyHandshake(userId: number, name: string): Promise<ContactHandshakeDto> {
+  async replyHandshake(userId: string, name: string): Promise<ContactHandshakeDto> {
     const contact = await this.contactsRepository.findOneOrFail({ where: { user: { id: userId }, name } });
     return this.generateHandshake(userId, contact);
   }
 
-  async acceptReplyHandshake(userId: number, name: string, handshake: ContactHandshakeDto): Promise<void> {
+  async acceptReplyHandshake(userId: string, name: string, handshake: ContactHandshakeDto): Promise<void> {
     const contact = await this.contactsRepository.findOneOrFail({ where: { user: { id: userId }, name } });
     await this.receiveHandshake(contact, handshake);
   }
 
-  private async generateHandshake(userId: number, contact: Contact): Promise<ContactHandshakeDto> {
+  private async generateHandshake(userId: string, contact: Contact): Promise<ContactHandshakeDto> {
     const publicSigningKey = await this.keyManager.readPublicSigningKey(userId);
     const signature = await this.keyManager.sign(userId, contact.handshakePublicKey);
     const contactHandshake = new ContactHandshakeDto();

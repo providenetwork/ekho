@@ -9,7 +9,7 @@ export class UsersResolvery {
   constructor(private readonly usersService: UsersService, private readonly channelsService: ChannelsService) {}
 
   @Query(returns => User)
-  public async userById(@Args('id') id: number): Promise<User> {
+  public async userById(@Args('id') id: string): Promise<User> {
     return this.usersService.findById(id);
   }
 

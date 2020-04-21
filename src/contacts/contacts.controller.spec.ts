@@ -29,7 +29,7 @@ describe('Contacts Controller', () => {
 
     jest.spyOn(service, 'getByUser').mockResolvedValueOnce(expected);
 
-    const actual = await controller.getContactsForUser(-1);
+    const actual = await controller.getContactsForUser('');
 
     expect(service.getByUser).toBeCalledTimes(1);
     expect(actual).toBe(expected);
@@ -42,7 +42,7 @@ describe('Contacts Controller', () => {
 
     jest.spyOn(service, 'initHandshake').mockResolvedValueOnce(expected);
 
-    const actual = await controller.initHandshake(-1, 'anon-contact-name');
+    const actual = await controller.initHandshake('', 'anon-contact-name');
 
     expect(service.initHandshake).toBeCalledTimes(1);
     expect(actual).toBe(expected);
@@ -51,7 +51,7 @@ describe('Contacts Controller', () => {
   it(`POST contacts/accept-init-handshake/:userId/:contactName
     - delegates ContactsService.acceptInitHandshake to store a given handshake for
     a contact with a given name, of a given userId`, async () => {
-    const anonUserId = -1;
+    const anonUserId = '';
     const anonContactName = 'no-such-name';
     const expected = fakeContactHandshake();
 
@@ -70,7 +70,7 @@ describe('Contacts Controller', () => {
 
     jest.spyOn(service, 'replyHandshake').mockResolvedValueOnce(expected);
 
-    const actual = await controller.generateReplyHandshake(-1, 'anon-contact-name');
+    const actual = await controller.generateReplyHandshake('', 'anon-contact-name');
 
     expect(service.replyHandshake).toBeCalledTimes(1);
     expect(actual).toBe(expected);
@@ -79,7 +79,7 @@ describe('Contacts Controller', () => {
   it(`POST contacts/accept-reply-handshake/:userId/:contactName
     - delegates ContactsService.acceptReplyHandshake to store a given reply handshake for
     a contact with a given name, of a given userId`, async () => {
-    const anonUserId = -1;
+    const anonUserId = '';
     const anonContactName = 'no-such-name';
     const expected = fakeContactHandshake();
 

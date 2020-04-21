@@ -5,7 +5,7 @@ export default class RawMessageDto {
   messageContents: string;
 
   @ApiProperty({ description: 'user identifier' })
-  userId: number;
+  userId: string;
 
   @ApiProperty({ description: 'channel identifier' })
   channelId: number;

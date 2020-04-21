@@ -3,8 +3,8 @@ import { User } from '../../users/entities/users.entity';
 
 @Entity()
 export class DbKeyPair {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   privateKey: string;

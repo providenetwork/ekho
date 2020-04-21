@@ -37,12 +37,12 @@ export class ChannelsController {
   }
 
   @Get('refresh')
-  async processEvents(@Query('userId') userId: number): Promise<ProcessReport> {
+  async processEvents(@Query('userId') userId: string): Promise<ProcessReport> {
     return this.channelService.process(userId);
   }
 
   @Post('broadcast/follow/:userId')
-  async followBroadcast(@Param('userId') userId: number, @Body() channel: BroadcastChannelLinkDto): Promise<Channel> {
+  async followBroadcast(@Param('userId') userId: string, @Body() channel: BroadcastChannelLinkDto): Promise<Channel> {
     return this.channelService.followBroadcast(userId, channel);
   }
 
@@ -50,7 +50,7 @@ export class ChannelsController {
   @ApiQuery({ name: 'channelId', required: true })
   @Get('broadcast/share')
   async getBroadcastChannelLink(
-    @Query('userId') userId: number,
+    @Query('userId') userId: string,
     @Query('channelId') channelId: number,
   ): Promise<BroadcastChannelLinkDto> {
     const link = this.channelService.getBroadcastChannelLink(userId, channelId);
@@ -64,7 +64,7 @@ export class ChannelsController {
 
   @ApiQuery({ name: 'userId', required: true })
   @Get('broadcast')
-  async findBroadcastChannels(@Query('userId') userId: number): Promise<BroadcastChannel[]> {
+  async findBroadcastChannels(@Query('userId') userId: string): Promise<BroadcastChannel[]> {
     return this.channelService.getBroadcastChannels(userId);
   }
 

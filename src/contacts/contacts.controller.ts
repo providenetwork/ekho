@@ -9,18 +9,18 @@ export class ContactsController {
   constructor(private readonly contactsService: ContactsService) {}
 
   @Get(':userId')
-  async getContactsForUser(@Param('userId') userId: number): Promise<ContactDto[]> {
+  async getContactsForUser(@Param('userId') userId: string): Promise<ContactDto[]> {
     return this.contactsService.getByUser(userId);
   }
 
   @Get(':userId/:contactId')
-  async findContactByUser(@Param('userId') userId: number, @Param('contactId') contactId: number): Promise<Contact> {
+  async findContactByUser(@Param('userId') userId: string, @Param('contactId') contactId: number): Promise<Contact> {
     return this.contactsService.findOneContact(userId, contactId);
   }
 
   @Post('generate-init-handshake/:userId/:contactName')
   async initHandshake(
-    @Param('userId') userId: number,
+    @Param('userId') userId: string,
     @Param('contactName') contactName: string,
   ): Promise<ContactHandshakeDto> {
     return this.contactsService.initHandshake(userId, contactName);
@@ -28,7 +28,7 @@ export class ContactsController {
 
   @Post('accept-init-handshake/:userId/:contactName')
   async acceptInitHandshake(
-    @Param('userId') userId: number,
+    @Param('userId') userId: string,
     @Param('contactName') contactName: string,
     @Body() initHandshake: ContactHandshakeDto,
   ): Promise<void> {
@@ -37,7 +37,7 @@ export class ContactsController {
 
   @Post('generate-reply-handshake/:userId/:contactName')
   async generateReplyHandshake(
-    @Param('userId') userId: number,
+    @Param('userId') userId: string,
     @Param('contactName') contactName: string,
   ): Promise<ContactHandshakeDto> {
     return this.contactsService.replyHandshake(userId, contactName);
@@ -45,7 +45,7 @@ export class ContactsController {
 
   @Post('accept-reply-handshake/:userId/:contactName')
   async acceptReplyHandshake(
-    @Param('userId') userId: number,
+    @Param('userId') userId: string,
     @Param('contactName') contactName: string,
     @Body() replyHandshake: ContactHandshakeDto,
   ): Promise<void> {

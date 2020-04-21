@@ -9,8 +9,8 @@ import { Contact } from '../../contacts/contacts.entity';
 @Unique('UQ_NAME', ['name'])
 export class User {
   @Field(type => ID)
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Field()
   @Column({ length: 500 })

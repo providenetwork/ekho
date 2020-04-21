@@ -10,25 +10,28 @@ export class DbKeyManager implements KeyManager {
     private readonly cryptographyService: CryptographyService,
   ) {}
 
-  async createSigningKey(id: number, queryRunner: QueryRunner): Promise<void> {
+  async createSigningKey(id: string, queryRunner: QueryRunner): Promise<void> {
     const { privateKey, publicKey } = this.cryptographyService.generateSigningKeyPair();
     const user = new User();
     user.id = id;
-    const keypair: DbKeyPair = { id, privateKey, publicKey, user };
+    const keypair: DbKeyPair = new DbKeyPair();
+    keypair.privateKey = privateKey;
+    keypair.publicKey = publicKey;
+    keypair.user = user;
     await queryRunner.manager.save('db_key_pair', keypair);
   }
 
-  async readPublicSigningKey(id: number): Promise<string> {
+  async readPublicSigningKey(id: string): Promise<string> {
     const keyPair = await this.keypairRepository.findOneOrFail({ select: ['publicKey'], where: { user: { id } } });
     return keyPair.publicKey;
   }
 
-  async sign(id: number, data: string): Promise<string> {
+  async sign(id: string, data: string): Promise<string> {
     const keyPair = await this.keypairRepository.findOneOrFail({ select: ['privateKey'], where: { user: { id } } });
     return this.cryptographyService.generateSignature(data, keyPair.privateKey);
   }
 
-  async verifySignatureById(id: number, signature: string, data: string): Promise<boolean> {
+  async verifySignatureById(id: string, signature: string, data: string): Promise<boolean> {
     const pubKey: string = await this.readPublicSigningKey(id);
     return this.verifySignature(signature, data, pubKey);
   }

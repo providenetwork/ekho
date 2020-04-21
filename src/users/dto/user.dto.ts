@@ -6,7 +6,7 @@ import { User } from '../entities/users.entity';
 export default class UserDto implements Partial<User> {
   @Field()
   @ApiProperty({ description: 'User ID' })
-  id: number;
+  id: string;
 
   @Field()
   @ApiProperty({ description: 'User name' })

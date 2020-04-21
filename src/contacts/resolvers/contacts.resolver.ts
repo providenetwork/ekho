@@ -13,7 +13,7 @@ export class ContactsResolver {
     return this.contactsService.findAll();
   }
   @Query(returns => [Contact])
-  public async contactsByUserId(@Args('userId') userId: number): Promise<Contact[]> {
+  public async contactsByUserId(@Args('userId') userId: string): Promise<Contact[]> {
     return this.contactsService.getByUser(userId);
   }
 
@@ -24,14 +24,14 @@ export class ContactsResolver {
 
   // @Mutation(returns => ContactHandshakeDto)
   // public async initHandshake(
-  //   @Arg('userId') userId: number,
+  //   @Arg('userId') userId: string,
   //   @Arg('contactName') contactName: string): Promise<ContactHandshakeDto> {
   //     return this.contactsService.initHandshake(userId, contactName);
   // }
 
   // @Mutation(returns => ContactHandshakeDto)
   // public async acceptInitHandshake(
-  //   @Arg('userId') userId: number,
+  //   @Arg('userId') userId: string,
   //   @Arg('contactName') contactName: string): Promise<ContactHandshakeDto> {
   //     return this.contactsService.initHandshake(userId, contactName);
   // }

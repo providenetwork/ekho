@@ -5,7 +5,7 @@ import * as supertest from 'supertest';
 export class ChannelsApi {
   constructor(private readonly app: INestApplication, private readonly testId: string) {}
 
-  async createChannel(name: string, userId: number, contactId: number) {
+  async createChannel(name: string, userId: string, contactId: number) {
     const response = await supertest
       .agent(this.app.getHttpServer())
       .post('/channels')
@@ -14,7 +14,7 @@ export class ChannelsApi {
     return response.body;
   }
 
-  async createChannelMessage(message: string, userId: number, channelId: number) {
+  async createChannelMessage(message: string, userId: string, channelId: number) {
     const response = await supertest
       .agent(this.app.getHttpServer())
       .post('/channels/message')
@@ -23,10 +23,10 @@ export class ChannelsApi {
     return response.body;
   }
 
-  async processEvents() {
+  async processEvents(userId) {
     const response = await supertest
       .agent(this.app.getHttpServer())
-      .get('/channels/refresh')
+      .get(`/channels/refresh?userId=${userId}`)
       .expect(200);
     return response.body;
   }
@@ -39,7 +39,7 @@ export class ChannelsApi {
     return response.body;
   }
 
-  async createBroadcastChannel(name: string, userId: number) {
+  async createBroadcastChannel(name: string, userId: string) {
     const response = await supertest
       .agent(this.app.getHttpServer())
       .post('/channels/broadcast')
@@ -48,7 +48,7 @@ export class ChannelsApi {
     return response.body;
   }
 
-  async followBroadcast(userId: number, channel: BroadcastChannelLinkDto) {
+  async followBroadcast(userId: string, channel: BroadcastChannelLinkDto) {
     const response = await supertest
       .agent(this.app.getHttpServer())
       .post(`/channels/broadcast/follow/${userId}`)
@@ -57,7 +57,7 @@ export class ChannelsApi {
     return response.body;
   }
 
-  async createBroadcastChannelListener(name: string, userId: number, contactId: number, key: string) {
+  async createBroadcastChannelListener(name: string, userId: string, contactId: number, key: string) {
     const response = await supertest
       .agent(this.app.getHttpServer())
       .post('/channels/broadcast/listener')

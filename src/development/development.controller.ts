@@ -16,7 +16,7 @@ export class DevelopmentController {
   ) {}
 
   @Get('generate-master-key/:userId/:contactName')
-  async getMasterKey(@Param('userId') userId: number, @Param('contactName') contactName: string): Promise<string> {
+  async getMasterKey(@Param('userId') userId: string, @Param('contactName') contactName: string): Promise<string> {
     const user: User = await this.usersService.findById(userId);
     const contact = await this.contactsService.findOne(user.id, contactName, true);
 
@@ -25,7 +25,7 @@ export class DevelopmentController {
   }
 
   @Get('contact/:userId/:contactName')
-  async getContact(@Param('userId') userId: number, @Param('contactName') contactName: string): Promise<any> {
+  async getContact(@Param('userId') userId: string, @Param('contactName') contactName: string): Promise<any> {
     const contact = await this.contactsService.findOne(userId, contactName, true);
     const contactHandshake = {
       id: contact.id,

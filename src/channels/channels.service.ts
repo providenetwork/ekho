@@ -72,7 +72,7 @@ export class ChannelsService {
   // until all events are processed
   // go onto next channel member
 
-  async process(userId: number): Promise<ProcessReport> {
+  async process(userId: string): Promise<ProcessReport> {
     const processReport = new ProcessReport();
     processReport.receivedMessages = 0;
     processReport.processedTotal = 0;
@@ -251,7 +251,7 @@ export class ChannelsService {
     }
   }
 
-  async getBroadcastChannelLink(userId: number, channelId: number): Promise<BroadcastChannelLinkDto> {
+  async getBroadcastChannelLink(userId: string, channelId: number): Promise<BroadcastChannelLinkDto> {
     await this.userService.findById(userId);
 
     const broadcastChannel = await this.broadcastChannelRepository.findOneOrFail({
@@ -277,7 +277,7 @@ export class ChannelsService {
   }
 
   // adds a broadcast channel from a non-contact source
-  async followBroadcast(userId: number, channelLink: BroadcastChannelLinkDto): Promise<Channel> {
+  async followBroadcast(userId: string, channelLink: BroadcastChannelLinkDto): Promise<Channel> {
     Logger.debug('creating broadcast channel listener');
     // 1. get user (fail if not found)
     await this.userService.findById(userId);
@@ -350,7 +350,7 @@ export class ChannelsService {
   }
 
   // Get a specified user's broadcast channels
-  async getBroadcastChannels(userId: number): Promise<BroadcastChannel[]> {
+  async getBroadcastChannels(userId: string): Promise<BroadcastChannel[]> {
     return this.broadcastChannelRepository.find({
       relations: ['channel', 'user'],
       where: { user: userId },
@@ -452,7 +452,7 @@ export class ChannelsService {
     // as the where clause above isn't working, doing in process filtering for now
     // but for some odd reason, id passes as string... converting to int to use in filter
     // suspecting a bug in nestjs
-    return allMessages.filter(m => m.channelMember.user?.id === parseInt(`${id}`, 10));
+    return allMessages.filter(m => m.channelMember.user?.id === `${id}`, 10);
   }
 
   // Finds a channelmessage  by id (TODO: for user id)
@@ -489,7 +489,7 @@ export class ChannelsService {
   }
 
   // Finds channel member by userid and channelid
-  async findChannelMemberByUserAndChannel(userId: number, channelId: number): Promise<ChannelMember> {
+  async findChannelMemberByUserAndChannel(userId: string, channelId: number): Promise<ChannelMember> {
     return this.channelMemberRepository.findOneOrFail({
       relations: ['channel', 'contact', 'user'],
       where: { channel: channelId, user: userId },
@@ -497,7 +497,7 @@ export class ChannelsService {
   }
 
   // Finds channel member by userid and channelid
-  async findChannelMembersByUser(userId: number): Promise<ChannelMember[]> {
+  async findChannelMembersByUser(userId: string): Promise<ChannelMember[]> {
     const channelMembers = await getRepository(ChannelMember)
       .createQueryBuilder('channelmember')
       .innerJoin('channelmember.contact', 'contact', 'contact.user = :userId', { userId })
@@ -822,7 +822,7 @@ export class ChannelsService {
    * Find all channel member records for a given user id
    * @param id user id
    */
-  async findAllChannelMembersByUserId(id: number): Promise<ChannelMember[]> {
+  async findAllChannelMembersByUserId(id: string): Promise<ChannelMember[]> {
     return this.channelMemberRepository.find({
       relations: ['channel'],
       where: { user: { id } },

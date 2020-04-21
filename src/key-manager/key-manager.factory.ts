@@ -35,6 +35,20 @@ export const keyManagerFactory: FactoryProvider<KeyManager> = {
       db: (): KeyManager => {
         return new DbKeyManager(keypairRepository, cryptographyService);
       },
+      provide: (): KeyManager => {
+        const baseURL = config.get<string>('keymanager.vault.url');
+        const timeout = config.get<number>('keymanager.vault.timeout');
+        const vaultToken = config.get<string>('keymanager.vault.token');
+
+        const axiosClient: AxiosInstance = axios.create({
+          baseURL,
+          timeout,
+          headers: {
+            'X-Vault-Token': vaultToken,
+          },
+        });
+        return new VaultKeyManager(axiosClient, cryptographyService);
+      },
     };
     const type = config.get<string>('keymanager.type');
     const builder = builders[type];

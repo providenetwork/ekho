@@ -6,6 +6,7 @@ export class VaultKeyManager implements KeyManager {
   constructor(private readonly client: AxiosInstance, private readonly cryptographyService: CryptographyService) {}
 
   async createSigningKey(id: string): Promise<void> {
+    // TODO change to the payload/paths/responses required by Provide
     const payload = {
       type: 'ed25519',
       derived: false,

@@ -4,7 +4,7 @@ import * as supertest from 'supertest';
 export class ContactsApi {
   constructor(private readonly app: INestApplication, private readonly testId: string) {}
 
-  async initHandshake(userId: number, contactName: string) {
+  async initHandshake(userId: string, contactName: string) {
     const response = await supertest
       .agent(this.app.getHttpServer())
       .post(`/contacts/generate-init-handshake/${userId}/${contactName}-${this.testId}`)
